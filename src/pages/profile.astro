@@ -9,7 +9,6 @@ import Check from 'phosphor-astro/Check.astro';
 import Star from 'phosphor-astro/Star.astro';
 import DotsThree from 'phosphor-astro/DotsThree.astro';
 import LockSimple from 'phosphor-astro/LockSimple.astro';
-import Scan from 'phosphor-astro/Scan.astro';
 import SignOut from 'phosphor-astro/SignOut.astro';
 import X from 'phosphor-astro/X.astro';
 import ImageSquare from 'phosphor-astro/ImageSquare.astro';
@@ -232,13 +231,6 @@ const recurringSchedules = [
               <span>Ganti Kata Sandi</span>
             </button>
 
-            <button type="button" class="btn-sec-action" id="btn-face-id">
-              <span class="sec-icon">
-                <Scan aria-hidden="true" width="15" height="15" />
-              </span>
-              <span>Atur Verifikasi Wajah (Face ID)</span>
-            </button>
-
             <a href="/login" class="btn-sec-action btn-sec-danger">
               <span class="sec-icon">
                 <SignOut aria-hidden="true" width="15" height="15" />
@@ -324,34 +316,6 @@ const recurringSchedules = [
             <button type="submit" class="btn-save-dialog">Simpan Kata Sandi</button>
           </div>
         </form>
-      </div>
-    </div>
-
-    <!-- 3. MODAL BIOMETRIK / FACE ID -->
-    <div id="face-id-modal" class="modal-backdrop-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-face-title">
-      <div class="modal-container-card text-center">
-        <div class="modal-head-line">
-          <h2 class="modal-dialog-title" id="modal-face-title">Konfigurasi Face ID</h2>
-          <button type="button" class="btn-modal-dismiss" id="btn-close-face-modal" aria-label="Tutup jendela">
-            <X aria-hidden="true" width="15" height="15" />
-          </button>
-        </div>
-
-        <div class="face-scan-box">
-          <div class="scan-reticle">
-            <Scan aria-hidden="true" width="48" height="48" />
-          </div>
-          <span class="scan-status-pill" id="scan-status-text">Sensor Kamera Siap</span>
-        </div>
-
-        <p class="modal-context-desc">
-          Pastikan wajah Anda berada di area pencahayaan yang cukup. Data biometrik diproses lokal secara aman melalui WebAuthn.
-        </p>
-
-        <div class="modal-footer-cluster">
-          <button type="button" class="btn-cancel-dialog" id="btn-cancel-face">Batal</button>
-          <button type="button" class="btn-save-dialog" id="btn-start-scan">Daftarkan Wajah Sekarang</button>
-        </div>
       </div>
     </div>
 
@@ -1198,37 +1162,6 @@ const recurringSchedules = [
       border-color: var(--color-primary);
     }
 
-    /* Face ID Reticle */
-    .face-scan-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      margin: 1.2rem 0 1.5rem;
-    }
-
-    .scan-reticle {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: var(--color-primary-light);
-      border: 2px dashed var(--color-border-focus);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-primary);
-    }
-
-    .scan-status-pill {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--color-primary-dark);
-      background: var(--color-primary-light);
-      border: 1px solid var(--color-border-focus);
-      padding: 0.25rem 0.85rem;
-      border-radius: var(--radius-full);
-    }
-
     /* Avatar Presets Grid */
     .avatar-presets-grid {
       display: grid;
@@ -1384,24 +1317,6 @@ const recurringSchedules = [
       e.preventDefault();
       closeModal('pwd-modal');
       window.jadwalinToast?.('Kata Sandi Diperbarui', 'Kata sandi Anda berhasil diubah dengan aman.', 'success');
-    });
-
-    // 3. Face ID Modal
-    document.getElementById('btn-face-id')?.addEventListener('click', () => openModal('face-id-modal'));
-    document.getElementById('btn-close-face-modal')?.addEventListener('click', () => closeModal('face-id-modal'));
-    document.getElementById('btn-cancel-face')?.addEventListener('click', () => closeModal('face-id-modal'));
-
-    document.getElementById('btn-start-scan')?.addEventListener('click', () => {
-      const statusText = document.getElementById('scan-status-text');
-      if (statusText) statusText.textContent = 'Memindai kontur wajah...';
-      setTimeout(() => {
-        if (statusText) statusText.textContent = 'Verifikasi Wajah Berhasil';
-        setTimeout(() => {
-          closeModal('face-id-modal');
-          window.jadwalinToast?.('Face ID Aktif', 'Wajah berhasil didaftarkan untuk autentikasi kilat.', 'success');
-          if (statusText) statusText.textContent = 'Sensor Kamera Siap';
-        }, 600);
-      }, 900);
     });
 
     // 4. Avatar Modal
