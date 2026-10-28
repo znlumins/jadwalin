@@ -3,6 +3,11 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import { Image } from 'astro:assets';
 import mascotImg from '../assets/craiyon.png';
+import CaretLeft from 'phosphor-astro/CaretLeft.astro';
+import Minus from 'phosphor-astro/Minus.astro';
+import Plus from 'phosphor-astro/Plus.astro';
+import Check from 'phosphor-astro/Check.astro';
+import Info from 'phosphor-astro/Info.astro';
 ---
 
 <DashboardLayout title="Tambah Tugas Baru" activeNav="prioritas">
@@ -16,9 +21,7 @@ import mascotImg from '../assets/craiyon.png';
       </div>
 
       <a href="/prioritas" class="btn-back-editorial">
-        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
+        <CaretLeft aria-hidden="true" width="14" height="14" />
         <span>Kembali ke Prioritas</span>
       </a>
     </header>
@@ -69,19 +72,14 @@ import mascotImg from '../assets/craiyon.png';
               <label class="field-label" for="dur-value">Estimasi Durasi</label>
               <div class="duration-stepper" role="group" aria-label="Pengaturan durasi jam">
                 <button type="button" id="btn-dec-dur" class="btn-step" aria-label="Kurangi durasi">
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
+                  <Minus aria-hidden="true" width="14" height="14" />
                 </button>
                 <div class="stepper-value-wrap">
                   <span id="dur-value" class="stepper-num">2</span>
                   <span class="stepper-unit">jam</span>
                 </div>
                 <button type="button" id="btn-inc-dur" class="btn-step" aria-label="Tambah durasi">
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
+                  <Plus aria-hidden="true" width="14" height="14" />
                 </button>
               </div>
             </div>
@@ -122,9 +120,7 @@ import mascotImg from '../assets/craiyon.png';
           <div class="form-actions-cluster">
             <a href="/prioritas" class="btn-cancel-secondary">Batal</a>
             <button type="submit" class="btn-submit-primary" id="btn-submit-task">
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
+              <Check aria-hidden="true" width="15" height="15" />
               <span>Simpan Tugas</span>
             </button>
           </div>
@@ -165,11 +161,7 @@ import mascotImg from '../assets/craiyon.png';
 
         <div class="recommendation-callout">
           <div class="callout-header">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
+            <Info aria-hidden="true" width="15" height="15" />
             <h3 class="callout-title">Strategi Pengerjaan</h3>
           </div>
           <p class="callout-text">

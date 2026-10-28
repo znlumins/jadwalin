@@ -3,6 +3,14 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import { Image } from 'astro:assets';
 import mascotImg from '../assets/craiyon.png';
+import UploadSimple from 'phosphor-astro/UploadSimple.astro';
+import ImageSquare from 'phosphor-astro/ImageSquare.astro';
+import FilePdf from 'phosphor-astro/FilePdf.astro';
+import ClipboardText from 'phosphor-astro/ClipboardText.astro';
+import Microphone from 'phosphor-astro/Microphone.astro';
+import X from 'phosphor-astro/X.astro';
+import Sparkle from 'phosphor-astro/Sparkle.astro';
+import Check from 'phosphor-astro/Check.astro';
 ---
 
 <DashboardLayout title="Upload Dokumen Jadwal" activeNav="jadwal">
@@ -40,11 +48,7 @@ import mascotImg from '../assets/craiyon.png';
       <section class="dropzone-surface">
         <div class="dropzone-box" id="dropzone-area">
           <div class="dropzone-icon-wrap">
-            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
+            <UploadSimple aria-hidden="true" width="32" height="32" />
           </div>
           <h2 class="dropzone-heading">Tarik dan Lepas Berkas ke Sini</h2>
           <p class="dropzone-hint">Mendukung format PDF, PNG, JPG, atau WebP hingga 25 MB</p>
@@ -58,7 +62,7 @@ import mascotImg from '../assets/craiyon.png';
         <div class="upload-modes-strip">
           <button type="button" class="mode-item active" data-mode="foto">
             <div class="mode-icon">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <ImageSquare aria-hidden="true" width="18" height="18" />
             </div>
             <div class="mode-info">
               <span class="mode-name">Foto atau Gambar</span>
@@ -68,7 +72,7 @@ import mascotImg from '../assets/craiyon.png';
 
           <button type="button" class="mode-item" data-mode="pdf">
             <div class="mode-icon">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <FilePdf aria-hidden="true" width="18" height="18" />
             </div>
             <div class="mode-info">
               <span class="mode-name">Dokumen PDF</span>
@@ -78,7 +82,7 @@ import mascotImg from '../assets/craiyon.png';
 
           <button type="button" class="mode-item" data-mode="text">
             <div class="mode-icon">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              <ClipboardText aria-hidden="true" width="18" height="18" />
             </div>
             <div class="mode-info">
               <span class="mode-name">Salin Teks</span>
@@ -88,7 +92,7 @@ import mascotImg from '../assets/craiyon.png';
 
           <button type="button" class="mode-item" data-mode="voice">
             <div class="mode-icon">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+              <Microphone aria-hidden="true" width="18" height="18" />
             </div>
             <div class="mode-info">
               <span class="mode-name">Dikte Suara</span>
@@ -111,33 +115,27 @@ import mascotImg from '../assets/craiyon.png';
           <ul class="file-queue-list">
             <li class="file-card-row">
               <div class="file-badge-icon">
-                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <ImageSquare aria-hidden="true" width="16" height="16" />
               </div>
               <div class="file-meta">
                 <span class="file-title">jadwal-kuliah.jpg</span>
                 <span class="file-detail">1.4 MB - Screenshot Portal</span>
               </div>
               <button type="button" class="btn-discard" aria-label="Hapus jadwal-kuliah.jpg" onclick="this.closest('.file-card-row')?.remove(); window.jadwalinToast?.('Berkas Dihapus', 'jadwal-kuliah.jpg dikeluarkan dari antrean.', 'info');">
-                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                <X aria-hidden="true" width="13" height="13" />
               </button>
             </li>
 
             <li class="file-card-row">
               <div class="file-badge-icon">
-                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <FilePdf aria-hidden="true" width="16" height="16" />
               </div>
               <div class="file-meta">
                 <span class="file-title">silabus-pemrograman.pdf</span>
                 <span class="file-detail">2.8 MB - Dokumen Mata Kuliah</span>
               </div>
               <button type="button" class="btn-discard" aria-label="Hapus silabus-pemrograman.pdf" onclick="this.closest('.file-card-row')?.remove(); window.jadwalinToast?.('Berkas Dihapus', 'silabus-pemrograman.pdf dikeluarkan dari antrean.', 'info');">
-                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                <X aria-hidden="true" width="13" height="13" />
               </button>
             </li>
           </ul>
@@ -175,7 +173,7 @@ import mascotImg from '../assets/craiyon.png';
           </div>
 
           <button type="button" id="btn-start-ai-analysis" class="btn-primary-action">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <Sparkle aria-hidden="true" width="16" height="16" />
             <span>Mulai Analisis Dokumen</span>
           </button>
         </div>
@@ -205,9 +203,7 @@ import mascotImg from '../assets/craiyon.png';
           <ul class="review-list">
             <li class="review-item">
               <div class="review-check-badge">
-                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <Check aria-hidden="true" width="12" height="12" />
               </div>
               <div class="review-info">
                 <strong class="item-name">Laporan Praktikum Pemrograman</strong>
@@ -217,9 +213,7 @@ import mascotImg from '../assets/craiyon.png';
 
             <li class="review-item">
               <div class="review-check-badge">
-                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <Check aria-hidden="true" width="12" height="12" />
               </div>
               <div class="review-info">
                 <strong class="item-name">Slide Presentasi Kelompok</strong>
@@ -229,10 +223,13 @@ import mascotImg from '../assets/craiyon.png';
 
             <li class="review-item">
               <div class="review-check-badge">
-                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <Check aria-hidden="true" width="12" height="12" />
               </div>
+              <div class="review-info">
+                <strong class="item-name">Kuliah Basis Data</strong>
+                <span class="item-meta">Jadwal Tetap: Kamis 10.00 - 12.00 di Lab 3</span>
+              </div>
+            </li>
               <div class="review-info">
                 <strong class="item-name">Kuliah Basis Data</strong>
                 <span class="item-meta">Jadwal Tetap: Kamis 10.00 - 12.00 di Lab 3</span>

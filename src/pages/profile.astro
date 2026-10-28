@@ -3,6 +3,16 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import { Image } from 'astro:assets';
 import mascotImg from '../assets/craiyon.png';
+import Plus from 'phosphor-astro/Plus.astro';
+import Camera from 'phosphor-astro/Camera.astro';
+import Check from 'phosphor-astro/Check.astro';
+import Star from 'phosphor-astro/Star.astro';
+import DotsThree from 'phosphor-astro/DotsThree.astro';
+import LockSimple from 'phosphor-astro/LockSimple.astro';
+import Scan from 'phosphor-astro/Scan.astro';
+import SignOut from 'phosphor-astro/SignOut.astro';
+import X from 'phosphor-astro/X.astro';
+import ImageSquare from 'phosphor-astro/ImageSquare.astro';
 
 const recurringSchedules = [
   {
@@ -56,10 +66,7 @@ const recurringSchedules = [
 
       <div class="header-actions">
         <button type="button" id="btn-add-routine" class="btn-primary-pill">
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
+          <Plus aria-hidden="true" width="14" height="14" />
           <span>Tambah Rutinitas</span>
         </button>
       </div>
@@ -77,10 +84,7 @@ const recurringSchedules = [
             <div class="avatar-wrap">
               <div class="avatar-circle" id="user-avatar-display">D</div>
               <button type="button" class="btn-avatar-edit" id="btn-edit-avatar" aria-label="Ganti foto profil">
-                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
+                <Camera aria-hidden="true" width="13" height="13" />
               </button>
             </div>
 
@@ -88,9 +92,7 @@ const recurringSchedules = [
               <div class="user-name-line">
                 <h2 class="user-full-name">Daffa Ahmad Al Attas</h2>
                 <span class="verified-tag">
-                  <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+                  <Check aria-hidden="true" width="11" height="11" />
                   Terverifikasi
                 </span>
               </div>
@@ -100,9 +102,7 @@ const recurringSchedules = [
                 <span class="meta-chip">Mahasiswa</span>
                 <span class="meta-chip">Semester 5</span>
                 <span class="focus-chip">
-                  <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
+                  <Star aria-hidden="true" width="11" height="11" />
                   Tingkat Fokus: Gold
                 </span>
               </div>
@@ -153,11 +153,7 @@ const recurringSchedules = [
 
                 <div class="routine-actions-box">
                   <button type="button" class="btn-routine-action" title="Kelola Jadwal" aria-label={`Opsi untuk ${item.title}`} data-title={item.title}>
-                    <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="1"></circle>
-                      <circle cx="19" cy="12" r="1"></circle>
-                      <circle cx="5" cy="12" r="1"></circle>
-                    </svg>
+                    <DotsThree aria-hidden="true" width="15" height="15" />
                   </button>
                 </div>
               </article>
@@ -231,34 +227,21 @@ const recurringSchedules = [
           <div class="security-links-stack">
             <button type="button" class="btn-sec-action" id="btn-change-pwd">
               <span class="sec-icon">
-                <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
+                <LockSimple aria-hidden="true" width="15" height="15" />
               </span>
               <span>Ganti Kata Sandi</span>
             </button>
 
             <button type="button" class="btn-sec-action" id="btn-face-id">
               <span class="sec-icon">
-                <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M7 3H5a2 2 0 0 0-2 2v2"></path>
-                  <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                  <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                  <path d="M3 17v2a2 2 0 0 0 2 2h2"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
+                <Scan aria-hidden="true" width="15" height="15" />
               </span>
               <span>Atur Verifikasi Wajah (Face ID)</span>
             </button>
 
             <a href="/login" class="btn-sec-action btn-sec-danger">
               <span class="sec-icon">
-                <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
+                <SignOut aria-hidden="true" width="15" height="15" />
               </span>
               <span>Keluar dari Akun</span>
             </a>
@@ -274,10 +257,7 @@ const recurringSchedules = [
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-routine-title">Tambah Rutinitas Mingguan</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-routine-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Rutinitas ini akan secara otomatis memblokir slot kalender Beavy agar tidak bentrok.</p>
@@ -318,10 +298,7 @@ const recurringSchedules = [
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-pwd-title">Perbarui Kata Sandi</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-pwd-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Gunakan kombinasi minimal 8 karakter dengan huruf besar, angka, dan simbol unik.</p>
@@ -356,22 +333,13 @@ const recurringSchedules = [
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-face-title">Konfigurasi Face ID</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-face-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
 
         <div class="face-scan-box">
           <div class="scan-reticle">
-            <svg aria-hidden="true" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 3H5a2 2 0 0 0-2 2v2"></path>
-              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-              <path d="M3 17v2a2 2 0 0 0 2 2h2"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
+            <Scan aria-hidden="true" width="48" height="48" />
           </div>
           <span class="scan-status-pill" id="scan-status-text">Sensor Kamera Siap</span>
         </div>
@@ -393,10 +361,7 @@ const recurringSchedules = [
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-avatar-title">Pilih Foto Profil</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-avatar-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Gunakan inisial bawaan, pilih avatar mahasiswa, atau unggah foto dari komputer.</p>
@@ -423,11 +388,7 @@ const recurringSchedules = [
         <div class="avatar-upload-drop">
           <input type="file" id="avatar-file-input" style="display: none;" accept="image/png, image/jpeg" />
           <button type="button" class="btn-choose-photo" onclick="document.getElementById('avatar-file-input')?.click();">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
+            <ImageSquare aria-hidden="true" width="16" height="16" />
             <span>Unggah Foto dari Komputer</span>
           </button>
         </div>
@@ -445,10 +406,7 @@ const recurringSchedules = [
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-edit-routine-title">Kelola Rutinitas</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-edit-routine-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Sesuaikan rincian jadwal rutin ini atau hapus agar slot waktu kembali dibuka.</p>
@@ -1405,11 +1363,7 @@ const recurringSchedules = [
         </div>
         <div class="routine-actions-box">
           <button type="button" class="btn-routine-action" title="Kelola Jadwal" aria-label="Opsi ${title}" data-title="${title}">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="1"></circle>
-              <circle cx="19" cy="12" r="1"></circle>
-              <circle cx="5" cy="12" r="1"></circle>
-            </svg>
+            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 256 256" fill="currentColor"><path d="M128,96a32,32,0,1,0,32,32A32,32,0,0,0,128,96Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,128,144ZM48,96a32,32,0,1,0,32,32A32,32,0,0,0,48,96Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,48,144Zm160-48a32,32,0,1,0,32,32A32,32,0,0,0,208,96Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,208,144Z"/></svg>
           </button>
         </div>
       `;

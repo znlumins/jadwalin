@@ -3,6 +3,9 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import { Image } from 'astro:assets';
 import mascotImg from '../assets/craiyon.png';
+import Target from 'phosphor-astro/Target.astro';
+import CaretRight from 'phosphor-astro/CaretRight.astro';
+import X from 'phosphor-astro/X.astro';
 ---
 
 <DashboardLayout title="Progres Belajar" activeNav="progress">
@@ -22,16 +25,12 @@ import mascotImg from '../assets/craiyon.png';
 
       <div class="hero-right">
         <button type="button" class="btn-target-secondary" id="btn-open-target">
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="6"></circle>
-            <circle cx="12" cy="12" r="2"></circle>
-          </svg>
+          <Target aria-hidden="true" width="14" height="14" />
           <span>Atur Target</span>
         </button>
         <a href="/prioritas" class="btn-hero-action">
           <span>Masuk Sesi Fokus</span>
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <CaretRight aria-hidden="true" width="16" height="16" />
         </a>
       </div>
     </header>
@@ -187,10 +186,7 @@ import mascotImg from '../assets/craiyon.png';
             <span class="modal-subtitle-tag">Optimasi Ritme Otomatis</span>
           </div>
           <button type="button" class="btn-modal-dismiss" id="btn-close-resched-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">
@@ -236,10 +232,7 @@ import mascotImg from '../assets/craiyon.png';
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-target-title">Atur Target Belajar</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-target-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Tentukan target waktu fokus pekanan agar Beavy dapat memberikan peringatan kapasitas yang akurat.</p>

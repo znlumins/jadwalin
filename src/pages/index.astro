@@ -4,6 +4,9 @@ import { Image } from 'astro:assets';
 import logoImg from '../assets/jadwal.in.png';
 import mascotImg from '../assets/craiyon.png';
 import '../styles/tokens.css';
+import Sparkle from 'phosphor-astro/Sparkle.astro';
+import Clock from 'phosphor-astro/Clock.astro';
+import ArrowRight from 'phosphor-astro/ArrowRight.astro';
 ---
 
 <!doctype html>
@@ -509,9 +512,7 @@ import '../styles/tokens.css';
 
             <!-- Top-Right Sparkle Badge -->
             <div class="badge-sparkle" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.8-7.2L2 12l7.2-2.8z"></path>
-              </svg>
+              <Sparkle width="20" height="20" />
             </div>
 
             <!-- Mascot Beavy -->
@@ -524,10 +525,7 @@ import '../styles/tokens.css';
 
             <!-- Bottom-Left Time Badge -->
             <div class="badge-time" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
+              <Clock width="16" height="16" />
               <span id="badge-text">Ada waktu buat kamu</span>
             </div>
           </div>
@@ -556,10 +554,7 @@ import '../styles/tokens.css';
             <!-- Action Button -->
             <button id="btn-next" class="btn-primary" type="button" aria-controls="card-title card-desc">
               <span id="btn-text">Lanjut</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
+              <ArrowRight width="18" height="18" aria-hidden="true" />
             </button>
 
             <!-- Footnote Step Progress -->

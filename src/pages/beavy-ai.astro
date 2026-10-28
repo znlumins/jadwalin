@@ -3,6 +3,10 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import { Image } from 'astro:assets';
 import mascotImg from '../assets/craiyon.png';
+import DownloadSimple from 'phosphor-astro/DownloadSimple.astro';
+import Trash from 'phosphor-astro/Trash.astro';
+import PaperPlaneRight from 'phosphor-astro/PaperPlaneRight.astro';
+import X from 'phosphor-astro/X.astro';
 ---
 
 <DashboardLayout title="Asisten AI Beavy" activeNav="beavy-ai">
@@ -71,14 +75,10 @@ import mascotImg from '../assets/craiyon.png';
           </div>
           <div class="chat-head-actions">
             <button id="btn-export-chat" type="button" class="btn-clear" title="Ekspor Ringkasan" aria-label="Ekspor diskusi">
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
+              <DownloadSimple aria-hidden="true" width="15" height="15" />
             </button>
             <button id="btn-clear-chat" type="button" class="btn-clear" title="Bersihkan Percakapan" aria-label="Bersihkan chat">
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <Trash aria-hidden="true" width="15" height="15" />
             </button>
           </div>
         </div>
@@ -107,10 +107,7 @@ import mascotImg from '../assets/craiyon.png';
             required
           />
           <button type="submit" class="btn-send-message" aria-label="Kirim Pesan">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
+            <PaperPlaneRight aria-hidden="true" width="16" height="16" />
           </button>
         </form>
       </section>
@@ -123,10 +120,7 @@ import mascotImg from '../assets/craiyon.png';
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-clear-title">Bersihkan Percakapan?</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-clear-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">
@@ -146,10 +140,7 @@ import mascotImg from '../assets/craiyon.png';
         <div class="modal-head-line">
           <h2 class="modal-dialog-title" id="modal-export-title">Ekspor Catatan Konsultasi</h2>
           <button type="button" class="btn-modal-dismiss" id="btn-close-export-modal" aria-label="Tutup jendela">
-            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
         <p class="modal-context-desc">Salin intisari rekomendasi asistensi Beavy untuk disimpan di aplikasi catatan Anda:</p>
