@@ -293,16 +293,6 @@ const { title, activeNav = 'beranda' } = Astro.props;
         object-fit: contain;
       }
 
-      .version-tag {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: var(--color-text-muted);
-        background: var(--color-tag-bg);
-        padding: 0.2rem 0.5rem;
-        border-radius: 6px;
-      }
-
       .nav-group {
         display: flex;
         flex-direction: column;
@@ -726,7 +716,6 @@ const { title, activeNav = 'beranda' } = Astro.props;
             <a href="/beranda">
               <Image src={logoImg} alt="Jadwal.in" class="sidebar-logo" loading="eager" />
             </a>
-            <span class="version-tag">v1.0</span>
           </div>
 
           <!-- Navigation Links -->
