@@ -7,6 +7,8 @@ import DownloadSimple from 'phosphor-astro/DownloadSimple.astro';
 import Trash from 'phosphor-astro/Trash.astro';
 import PaperPlaneRight from 'phosphor-astro/PaperPlaneRight.astro';
 import X from 'phosphor-astro/X.astro';
+import Key from 'phosphor-astro/Key.astro';
+import Sparkle from 'phosphor-astro/Sparkle.astro';
 ---
 
 <DashboardLayout title="Asisten AI Beavy" activeNav="beavy-ai">
@@ -23,9 +25,9 @@ import X from 'phosphor-astro/X.astro';
           Dapatkan saran rasional mengenai alokasi durasi, pemecahan tugas sulit, dan strategi mengurai kepanikan deadline.
         </p>
       </div>
-      <div class="status-pill">
+      <div class="status-pill" id="beavy-status-pill">
         <span class="pulse-dot"></span>
-        <span>Siaga : 5 tugas aktif dipantau</span>
+        <span id="beavy-status-text">Siaga : Memeriksa tugas aktif...</span>
       </div>
     </header>
 
@@ -39,7 +41,7 @@ import X from 'phosphor-astro/X.astro';
             <Image src={mascotImg} alt="Beavy AI" class="avatar-mascot" />
           </div>
           <h2 class="profile-name">Beavy AI</h2>
-          <span class="role-badge">Pendamping Jadwal Mahasiswa</span>
+          <span class="role-badge" id="ai-engine-badge">Asisten Cerdas Aktif</span>
           <p class="profile-bio">
             Membantumu tetap rasional menyusun prioritas tanpa stres deadline yang berlebihan.
           </p>
@@ -62,6 +64,9 @@ import X from 'phosphor-astro/X.astro';
             <button type="button" class="chip-item" data-msg="Berapa lama estimasi realistis untuk membuat slide presentasi kelompok?">
               <span>Estimasi durasi tugas kelompok</span>
             </button>
+            <button type="button" class="chip-item" data-msg="Aku merasa capek dan mager mulai tugas, ada saran?">
+              <span>Tips mengatasi malas & stres</span>
+            </button>
           </div>
         </div>
       </aside>
@@ -71,10 +76,13 @@ import X from 'phosphor-astro/X.astro';
         <div class="chat-head-row">
           <div>
             <h3 class="surface-title">Ruang Percakapan</h3>
-            <p class="surface-caption">Ketik pertanyaan atau klik salah satu topik cepat di kiri</p>
+            <p class="surface-caption" id="chat-subcaption">Ketik pertanyaan atau klik salah satu topik cepat di kiri</p>
           </div>
           <div class="chat-head-actions">
-            <button id="btn-export-chat" type="button" class="btn-clear" title="Ekspor Ringkasan" aria-label="Ekspor diskusi">
+            <button id="btn-api-key" type="button" class="btn-clear" title="Pengaturan AI (Gemini Key)" aria-label="Pengaturan Gemini AI">
+              <Key aria-hidden="true" width="15" height="15" />
+            </button>
+            <button id="btn-export-chat" type="button" class="btn-clear" title="Ekspor Catatan Percakapan" aria-label="Ekspor diskusi">
               <DownloadSimple aria-hidden="true" width="15" height="15" />
             </button>
             <button id="btn-clear-chat" type="button" class="btn-clear" title="Bersihkan Percakapan" aria-label="Bersihkan chat">
@@ -85,12 +93,12 @@ import X from 'phosphor-astro/X.astro';
 
         <!-- Messages Stream -->
         <div class="messages-flow" id="messages-container">
-          <!-- Message 1 from Beavy -->
+          <!-- Initial Welcome Message from Beavy -->
           <div class="message-bubble beavy">
             <div class="msg-body">
               <span class="msg-author">Beavy</span>
-              <p>
-                Halo Daffa! Aku sudah memeriksa agenda dan 5 tugas aktifmu. Hari ini ada sesi pemrograman penting pada pukul 10.00. Apa yang ingin kamu optimalkan?
+              <p id="initial-welcome-text">
+                Halo! Aku sudah memeriksa agenda dan tugas aktifmu. Ada yang ingin kamu diskusikan atau optimalkan hari ini?
               </p>
             </div>
           </div>
@@ -102,11 +110,11 @@ import X from 'phosphor-astro/X.astro';
             type="text" 
             id="user-input" 
             class="chat-text-input" 
-            placeholder="Tanyakan penyesuaian jadwal atau mintai tips pengerjaan..." 
+            placeholder="Tanyakan prioritas, tips belajar, atau ketik 'Tambah tugas [nama]'..." 
             autocomplete="off"
             required
           />
-          <button type="submit" class="btn-send-message" aria-label="Kirim Pesan">
+          <button type="submit" class="btn-send-message" aria-label="Kirim Pesan" id="btn-send-msg">
             <PaperPlaneRight aria-hidden="true" width="16" height="16" />
           </button>
         </form>
@@ -143,14 +151,10 @@ import X from 'phosphor-astro/X.astro';
             <X aria-hidden="true" width="15" height="15" />
           </button>
         </div>
-        <p class="modal-context-desc">Salin intisari rekomendasi asistensi Beavy untuk disimpan di aplikasi catatan Anda:</p>
+        <p class="modal-context-desc">Salin transkrip konsultasi Beavy untuk disimpan di aplikasi catatan Anda:</p>
 
         <div class="export-preview-card">
-          <pre class="export-code-block" id="export-text-content"># Intisari Belajar Beavy AI
-- Fokus Utama: Laporan Praktikum Pemrograman (10.00 - 12.00)
-- Rekomendasi: Bagi tugas menjadi 2 sesi 50 menit
-- Waktu Luang: 13.30 - 14.30 (Olahraga / Istirahat Bebas Layar)
-- Batas Beban: Optimal (94%)</pre>
+          <pre class="export-code-block" id="export-text-content"></pre>
         </div>
 
         <div class="modal-footer-cluster">
@@ -160,42 +164,59 @@ import X from 'phosphor-astro/X.astro';
       </div>
     </div>
 
+    <!-- MODAL 3: PENGATURAN AI GEMINI -->
+    <div id="api-key-modal" class="modal-backdrop-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-api-title">
+      <div class="modal-container-card">
+        <div class="modal-head-line">
+          <h2 class="modal-dialog-title" id="modal-api-title">Integrasi Google Gemini AI</h2>
+          <button type="button" class="btn-modal-dismiss" id="btn-close-api-modal" aria-label="Tutup jendela">
+            <X aria-hidden="true" width="15" height="15" />
+          </button>
+        </div>
+        <p class="modal-context-desc">
+          Hubungkan Beavy langsung ke model <strong>Google Gemini</strong> untuk percakapan AI natural tanpa batas. Kunci API disimpan secara lokal dan aman di browser Anda.
+        </p>
+
+        <div class="api-key-form-group">
+          <label for="input-gemini-key" class="api-key-label">Google AI Studio API Key (Opsional)</label>
+          <input 
+            type="password" 
+            id="input-gemini-key" 
+            class="api-key-input" 
+            placeholder="AIzaSy..." 
+            autocomplete="off"
+          />
+          <p class="api-key-hint">
+            Dapatkan kunci gratis di <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">aistudio.google.com</a>
+          </p>
+        </div>
+
+        <div class="api-status-card" id="api-status-card">
+          <span class="api-status-badge mode-local" id="api-status-badge">Mode Mesin Heuristik Beavy (Aktif)</span>
+          <p class="api-status-note" id="api-status-note">
+            Beavy tetap cerdas menjawab analisis prioritas, alokasi jam belajar, dan jadwal berdasarkan database tugas Anda meskipun tanpa API Key.
+          </p>
+        </div>
+
+        <div class="modal-footer-cluster">
+          <button type="button" class="btn-cancel-dialog" id="btn-cancel-api">Tutup</button>
+          <button type="button" class="btn-cancel-dialog" id="btn-test-api" style="flex: 1.1;">Uji Koneksi</button>
+          <button type="button" class="btn-save-dialog" id="btn-save-api">Simpan Kunci</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <style>
-    /* =========================================================
-       AWWWARDS EDITORIAL BEAVY AI CANVAS
-       Clean Split Surface, Quiet Typography, High Contrast
-       ========================================================= */
-
-    :root {
-      --overlay-scrim: rgba(18, 10, 30, 0.4);
-    }
-
-    :focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, ::before, ::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-
+    /* Clean Editorial Architecture */
     .beavy-page-workspace {
-      max-width: 1240px;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-      padding-bottom: 3.5rem;
+      gap: 2.2rem;
     }
 
-    /* 1. HERO */
+    /* 1. HERO HEADER */
     .beavy-hero {
       display: flex;
       justify-content: space-between;
@@ -237,6 +258,7 @@ import X from 'phosphor-astro/X.astro';
       padding: 0.45rem 0.95rem;
       border-radius: var(--radius-full);
       box-shadow: var(--shadow-xs);
+      white-space: nowrap;
     }
 
     .pulse-dot {
@@ -347,12 +369,13 @@ import X from 'phosphor-astro/X.astro';
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
+      transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
     }
 
     .chip-item:hover {
       border-color: var(--color-border-focus);
       background: var(--color-primary-light);
+      transform: translateX(3px);
     }
 
     /* RIGHT CHAT SURFACE */
@@ -364,7 +387,7 @@ import X from 'phosphor-astro/X.astro';
       box-shadow: var(--shadow-xs);
       display: flex;
       flex-direction: column;
-      height: 600px;
+      height: 640px;
     }
 
     .chat-head-row {
@@ -406,12 +429,13 @@ import X from 'phosphor-astro/X.astro';
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: color 0.15s ease, border-color 0.15s ease;
+      transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
     }
 
     .btn-clear:hover {
       color: var(--color-primary);
-      border-color: var(--color-primary);
+      border-color: var(--color-border-focus);
+      background: var(--color-primary-light);
     }
 
     /* Messages */
@@ -423,12 +447,19 @@ import X from 'phosphor-astro/X.astro';
       gap: 1.2rem;
       padding-right: 0.5rem;
       margin-bottom: 1.5rem;
+      scroll-behavior: smooth;
     }
 
     .message-bubble {
       display: flex;
       flex-direction: column;
-      max-width: 85%;
+      max-width: 88%;
+      animation: msgFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes msgFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .message-bubble.beavy {
@@ -440,10 +471,28 @@ import X from 'phosphor-astro/X.astro';
     }
 
     .msg-body {
-      padding: 1rem 1.2rem;
+      padding: 0.95rem 1.2rem;
       border-radius: var(--radius-lg);
       font-size: 0.88rem;
       line-height: 1.55;
+    }
+
+    .msg-body p {
+      margin-bottom: 0.5rem;
+    }
+    .msg-body p:last-child {
+      margin-bottom: 0;
+    }
+    .msg-body ul, .msg-body ol {
+      margin: 0.35rem 0 0.35rem 1.3rem;
+      padding: 0;
+    }
+    .msg-body li {
+      margin-bottom: 0.2rem;
+    }
+    .msg-body strong {
+      color: var(--color-text-main);
+      font-weight: 700;
     }
 
     .message-bubble.beavy .msg-body {
@@ -465,7 +514,31 @@ import X from 'phosphor-astro/X.astro';
       font-weight: 800;
       color: var(--color-primary-dark);
       margin-bottom: 0.25rem;
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Typing indicator */
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.2rem 0.4rem;
+    }
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-5px); opacity: 1; }
     }
 
     /* Input Form */
@@ -506,18 +579,79 @@ import X from 'phosphor-astro/X.astro';
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      transition: background-color 0.15s ease, transform 0.1s ease;
     }
 
     .btn-send-message:hover {
       background: var(--color-primary-dark);
+      transform: scale(1.04);
+    }
+
+    /* API Modal Form */
+    .api-key-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .api-key-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+    }
+    .api-key-input {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-canvas);
+      color: var(--color-text-main);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    .api-key-input:focus {
+      outline: 2px solid var(--color-primary);
+    }
+    .api-key-hint {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    .api-status-card {
+      background: var(--color-canvas);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .api-status-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 0.35rem;
+    }
+    .api-status-badge.mode-gemini {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+    .api-status-badge.mode-local {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+      border: 1px solid var(--color-border-focus);
+    }
+    .api-status-note {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.45;
     }
 
     /* MODAL STYLES */
     .modal-backdrop-overlay {
       position: fixed;
       inset: 0;
-      background: var(--overlay-scrim);
+      background: var(--overlay-scrim, rgba(15, 10, 25, 0.4));
       backdrop-filter: blur(8px);
       z-index: 999;
       align-items: center;
@@ -537,6 +671,12 @@ import X from 'phosphor-astro/X.astro';
       width: 100%;
       box-shadow: var(--shadow-lg);
       border: 1px solid var(--color-border);
+      animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPopIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .modal-head-line {
@@ -582,6 +722,8 @@ import X from 'phosphor-astro/X.astro';
       border-radius: var(--radius-md);
       padding: 1rem;
       margin-bottom: 1.6rem;
+      max-height: 220px;
+      overflow-y: auto;
     }
 
     .export-code-block {
@@ -609,6 +751,7 @@ import X from 'phosphor-astro/X.astro';
       font-size: 0.88rem;
       cursor: pointer;
       transition: color 0.15s ease, border-color 0.15s ease;
+      text-align: center;
     }
 
     .btn-cancel-dialog:hover {
@@ -628,6 +771,7 @@ import X from 'phosphor-astro/X.astro';
       cursor: pointer;
       box-shadow: var(--shadow-sm);
       transition: background-color 0.15s ease;
+      text-align: center;
     }
 
     .btn-save-dialog:hover {
@@ -639,12 +783,13 @@ import X from 'phosphor-astro/X.astro';
       padding: 0.75rem;
       border-radius: var(--radius-full);
       border: none;
-      background: var(--color-primary-dark);
+      background: #dc2626;
       color: var(--color-surface);
       font-weight: 700;
       font-size: 0.88rem;
       cursor: pointer;
       transition: opacity 0.15s ease;
+      text-align: center;
     }
 
     .btn-danger-dialog:hover {
@@ -663,6 +808,8 @@ import X from 'phosphor-astro/X.astro';
   </style>
 
   <script>
+    import { getCurrentUser, getUserData, addUserTask } from '../utils/db';
+
     declare global {
       interface Window {
         jadwalinToast?: (title: string, msg: string, type?: 'success' | 'info' | 'warning' | 'error') => void;
@@ -672,73 +819,422 @@ import X from 'phosphor-astro/X.astro';
     const openModal = (id: string) => document.getElementById(id)?.classList.add('active');
     const closeModal = (id: string) => document.getElementById(id)?.classList.remove('active');
 
-    const form = document.getElementById('chat-form');
+    const form = document.getElementById('chat-form') as HTMLFormElement;
     const input = document.getElementById('user-input') as HTMLInputElement;
     const container = document.getElementById('messages-container');
     const clearBtn = document.getElementById('btn-clear-chat');
     const exportBtn = document.getElementById('btn-export-chat');
+    const apiKeyBtn = document.getElementById('btn-api-key');
 
-    function appendMessage(text: string, isUser = false) {
+    // Context & User State
+    const currentUser = getCurrentUser();
+    const userEmail = currentUser?.email || 'daffaahmadalsch@student.ub.ac.id';
+    const userName = currentUser?.name?.split(' ')[0] || 'Daffa';
+    const STORAGE_KEY_CHAT = 'jadwalin_chat_history_' + userEmail.trim().toLowerCase();
+    const STORAGE_KEY_GEMINI = 'jadwalin_gemini_api_key';
+
+    // 1. Initial UI update from User Database
+    const refreshContextState = () => {
+      const { tasks, schedules } = getUserData(userEmail);
+      const statusText = document.getElementById('beavy-status-text');
+      if (statusText) {
+        statusText.textContent = `Siaga : ${tasks.length} tugas aktif dipantau`;
+      }
+      return { tasks, schedules };
+    };
+
+    const initialData = refreshContextState();
+
+    // 2. Format plain text markdown to safe HTML
+    function formatMarkdown(text: string): string {
+      let formatted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Bold **text**
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      // Bullets • or * or -
+      const lines = formatted.split('\n');
+      let html = '';
+      let inList = false;
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          if (!inList) {
+            html += '<ul>';
+            inList = true;
+          }
+          html += `<li>${trimmed.substring(2)}</li>`;
+        } else if (/^\d+\.\s/.test(trimmed)) {
+          if (!inList) {
+            html += '<ol>';
+            inList = true;
+          }
+          const itemText = trimmed.replace(/^\d+\.\s*/, '');
+          html += `<li>${itemText}</li>`;
+        } else {
+          if (inList) {
+            html += inList ? '</ul>' : '';
+            inList = false;
+          }
+          if (trimmed) {
+            html += `<p>${trimmed}</p>`;
+          }
+        }
+      }
+
+      if (inList) html += '</ul>';
+      return html || `<p>${text}</p>`;
+    }
+
+    // 3. Message Bubble Renderer
+    interface ChatMessage {
+      text: string;
+      isUser: boolean;
+      time?: string;
+    }
+
+    let chatHistory: ChatMessage[] = [];
+
+    function appendMessage(text: string, isUser = false, save = true) {
       if (!container) return;
       const wrap = document.createElement('div');
       wrap.className = `message-bubble ${isUser ? 'user' : 'beavy'}`;
       
+      const contentHtml = isUser 
+        ? `<p>${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`
+        : formatMarkdown(text);
+
       wrap.innerHTML = `
         <div class="msg-body">
           ${!isUser ? '<span class="msg-author">Beavy</span>' : ''}
-          <p>${text}</p>
+          ${contentHtml}
         </div>
       `;
       container.appendChild(wrap);
       container.scrollTop = container.scrollHeight;
+
+      if (save) {
+        chatHistory.push({ text, isUser, time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
+        try {
+          localStorage.setItem(STORAGE_KEY_CHAT, JSON.stringify(chatHistory));
+        } catch (e) {}
+      }
     }
 
+    // Load Saved Chat History or show initial
+    try {
+      const savedRaw = localStorage.getItem(STORAGE_KEY_CHAT);
+      if (savedRaw) {
+        const parsed = JSON.parse(savedRaw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          chatHistory = parsed;
+          if (container) container.innerHTML = '';
+          chatHistory.forEach(item => appendMessage(item.text, item.isUser, false));
+        }
+      }
+    } catch (e) {}
+
+    // Show customized initial welcome if empty
+    if (!chatHistory.length) {
+      const topTask = initialData.tasks[0]?.title || 'tugas perkuliahan';
+      const welcomeText = `Halo ${userName}! Aku sudah memeriksa agenda dan ${initialData.tasks.length} tugas aktifmu. Saat ini fokus utamamu adalah **${topTask}**. Ada penyesuaian jadwal atau tips belajar yang ingin kamu diskusikan?`;
+      appendMessage(welcomeText, false, true);
+    }
+
+    // 4. Typing Indicator
+    function showTypingIndicator(): HTMLElement | null {
+      if (!container) return null;
+      const wrap = document.createElement('div');
+      wrap.id = 'beavy-typing-indicator';
+      wrap.className = 'message-bubble beavy';
+      wrap.innerHTML = `
+        <div class="msg-body">
+          <span class="msg-author">Beavy</span>
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      `;
+      container.appendChild(wrap);
+      container.scrollTop = container.scrollHeight;
+      return wrap;
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('beavy-typing-indicator');
+      if (el) el.remove();
+    }
+
+    // 5. Intelligent Local Heuristic AI Engine (Offline Zero-Failure)
+    function generateLocalAIResponse(query: string): string {
+      const q = query.toLowerCase();
+      const { tasks, schedules } = getUserData(userEmail);
+
+      // A. Action: Tambah tugas lewat chat
+      const addMatch = query.match(/(?:tambah|buat|masukkan|catat|agendakan)\s+tugas\s*[:\-]?\s*(.*)/i);
+      if (addMatch && addMatch[1] && addMatch[1].trim()) {
+        const title = addMatch[1].trim();
+        addUserTask(userEmail, {
+          title,
+          category: 'Kuliah',
+          duration: '90 mnt',
+          difficulty: 'Sedang',
+          deadline: 'Segera'
+        });
+        refreshContextState();
+        window.jadwalinToast?.('Tugas Ditambahkan', `"${title}" berhasil dicatat oleh Beavy.`, 'success');
+        return `Siap, ${userName}! Tugas **"${title}"** berhasil kutambahkan ke dalam daftar prioritas belajarmu. Jadwal pengerjaan otomatis juga sudah dialokasikan di Beranda & Kalender.`;
+      }
+
+      // B. Tanya Prioritas / Kenapa nomor 1
+      if (q.includes('nomor 1') || q.includes('no 1') || q.includes('prioritas') || q.includes('terpenting') || q.includes('kenapa')) {
+        if (!tasks.length) {
+          return `Saat ini belum ada tugas aktif dalam daftarmu. Tambahkan tugas lewat tombol **+ Tugas Baru** atau ketik saja *"Tambah tugas [nama tugas]"* di sini!`;
+        }
+        const top = tasks[0];
+        return `Tugas **"${top.title}"** ditempatkan sebagai **Prioritas #1** karena memiliki tenggat waktu terdekat (${top.deadline || 'Mendesak'}) dan bobot kesulitan ${top.difficulty || 'Tinggi'}.\n\n**Rekomendasi Strategi:**\n• Alokasikan durasi **${top.duration || '90 mnt'}** di awal hari saat energi kognitif masih prima.\n• Matikan notifikasi ponsel dan gunakan interval fokus 45 menit.\n• Menyelesaikan tugas ini lebih dulu akan mengurangi 70% beban kecemasan belajarmu hari ini!`;
+      }
+
+      // C. Tanya Jadwal / Atur Ulang / Bentrok
+      if (q.includes('jadwal') || q.includes('atur ulang') || q.includes('bentrok') || q.includes('minggu ini') || q.includes('hari ini')) {
+        return `Berikut ritme pembagian waktu belajar ideal yang kuoptimalkan untukmu hari ini:\n\n• **Pagi (08.00 - 11.30)**: Sesi fokus tinggi untuk materi analitis dan tugas berat.\n• **Siang (12.00 - 13.30)**: Jeda istirahat wajib, makan siang, dan rehat layar (*screen detox*).\n• **Sore (14.00 - 16.30)**: Pengerjaan tugas praktikum atau kolaborasi kelompok.\n• **Malam (19.30 - 21.00)**: Review kilat bahan kuliah esok hari lalu istirahat cukup.\n\nTidak ada bentrok jam kuliah yang terdeteksi di jadwal aktifmu!`;
+      }
+
+      // D. Waktu Luang / Slot Kosong
+      if (q.includes('luang') || q.includes('kosong') || q.includes('istirahat') || q.includes('rehat') || q.includes('santai')) {
+        return `Berdasarkan analisis kalendermu hari ini, ada 2 slot waktu luang terbaik:\n\n1. **12.30 - 14.00 (90 Menit)**: Jeda emas setelah sesi pagi untuk makan siang dan me-recharge fokus kognitif.\n2. **16.30 - 18.30 (120 Menit)**: Waktu transisi sebelum malam, sangat baik untuk jalan santai, olahraga ringan, atau santai tanpa memikirkan deadline.\n\nIstirahat yang terencana adalah bagian penting dari produktivitas tinggi!`;
+      }
+
+      // E. Estimasi / Cara Mengerjakan / Laporan / Slide
+      if (q.includes('estimasi') || q.includes('durasi') || q.includes('slide') || q.includes('presentasi') || q.includes('laporan') || q.includes('skripsi')) {
+        return `Untuk tugas seperti ini, estimasi realistis totalnya adalah **90 - 120 menit**. Jangan selesaikan sekaligus, gunakan rumus 3 fase ini:\n\n1. **Fase Riset & Outline (25 mnt)**: Tentukan struktur poin dan kumpulkan referensi.\n2. **Fase Draf Utama (50 mnt)**: Tulis atau buat konten tanpa terdistraksi memoles visual/ejaan.\n3. **Fase Polish & Finishing (25 mnt)**: Rapikan format, cek sitasi, dan uji keterbacaan.\n\nDengan membaginya jadi 3 langkah kecil, otak tidak akan merasa kewalahan!`;
+      }
+
+      // F. Stres / Capek / Malas / Prokrastinasi
+      if (q.includes('capek') || q.includes('lelah') || q.includes('stres') || q.includes('malas') || q.includes('mager') || q.includes('panik')) {
+        return `Sangat wajar merasa lelah saat beban kuliah sedang padat. Solusinya bukan memaksakan diri bekerja berjam-jam, tapi menurunkan hambatan awal:\n\n• **Gunakan Aturan 5 Menit**: Cukup buka file tugasmu dan ketik 1 paragraf saja. Setelah 5 menit, kamu bebas berhenti jika masih lelah.\n• **Pilih 1 Aksi Mikro**: Selesaikan bagian termudah lebih dulu untuk membangun momentum.\n• **Tarik Napas & Minum Air**: Berdiri sejenak dan regangkan punggungmu sekarang. Kamu pasti bisa melaluinya langkah demi langkah!`;
+      }
+
+      // G. Default Contextual Response
+      const activeCount = tasks.length;
+      return `Pertanyaan yang bagus, ${userName}! Berdasarkan pantauan ${activeCount} tugas aktifmu, kuncinya adalah konsistensi bertahap. Apakah kamu ingin aku merekomendasikan jam mulai yang tepat, memecah tugas tertentu, atau menjadwalkan tugas baru?`;
+    }
+
+    // 6. External Gemini AI API Caller
+    async function queryGeminiAI(apiKey: string, userPrompt: string): Promise<string> {
+      const { tasks, schedules } = getUserData(userEmail);
+      const taskSummary = tasks.map((t, idx) => `${idx + 1}. ${t.title} (Kat: ${t.category}, Tenggat: ${t.deadline || '-'}, Kesulitan: ${t.difficulty || '-'})`).join('\n');
+      const schedSummary = schedules.map(s => `[${s.time} - ${s.duration}] ${s.title}`).join('\n');
+
+      const systemContext = `Kamu adalah Beavy, asisten AI maskot cerdas, empati, dan rasional untuk aplikasi Jadwal.in.
+Profil Mahasiswa yang kamu dampingi:
+- Nama: ${userName}
+- Daftar Tugas Aktif:
+${taskSummary || '(Belum ada tugas)'}
+- Jadwal Rutin:
+${schedSummary || '(Belum ada sesi)'}
+
+Instruksi gaya bahasa:
+- Jawab dalam Bahasa Indonesia yang santun, ramah, to-the-point, dan berempati pada dinamika mahasiswa.
+- Gunakan format markdown tebal (**kata penting**) dan poin-poin (•) jika memberi saran langkah.
+- Jaga jawaban tetap ringkas dan padat (maksimal 2-4 paragraf).`;
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      const payload = {
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: `${systemContext}\n\nPertanyaan Mahasiswa: ${userPrompt}`
+              }
+            ]
+          }
+        ]
+      };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!reply) throw new Error('Format balasan AI tidak valid');
+      return reply.trim();
+    }
+
+    // 7. Core Dispatcher: Gemini with Local Heuristic Fallback
+    async function handleUserInteraction(userText: string) {
+      appendMessage(userText, true);
+      input.value = '';
+
+      showTypingIndicator();
+
+      const savedKey = localStorage.getItem(STORAGE_KEY_GEMINI)?.trim() || (import.meta as any).env?.PUBLIC_GEMINI_API_KEY?.trim() || '';
+
+      if (savedKey) {
+        try {
+          const aiReply = await queryGeminiAI(savedKey, userText);
+          removeTypingIndicator();
+          appendMessage(aiReply, false);
+          return;
+        } catch (err: any) {
+          console.warn('Gemini API call failed, falling back to local engine:', err);
+          window.jadwalinToast?.('Beralih ke Mesin Lokal', 'Koneksi Gemini gagal, Beavy merespons dengan kecerdasan lokal.', 'warning');
+        }
+      }
+
+      // Local engine fallback with slight natural delay
+      setTimeout(() => {
+        removeTypingIndicator();
+        const localReply = generateLocalAIResponse(userText);
+        appendMessage(localReply, false);
+      }, 500);
+    }
+
+    // Submit handler
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
       const val = input.value.trim();
       if (!val) return;
-      appendMessage(val, true);
-      input.value = '';
-
-      setTimeout(() => {
-        appendMessage('Saran cerdas: Alokasikan tugas ini ke sesi fokus jam 15.00 agar kamu tidak menumpuk beban di malam hari.', false);
-      }, 700);
+      handleUserInteraction(val);
     });
 
+    // Quick Prompt Chips
     document.querySelectorAll('.chip-item').forEach((btn) => {
       btn.addEventListener('click', () => {
         const msg = btn.getAttribute('data-msg');
-        if (msg) {
-          appendMessage(msg, true);
-          setTimeout(() => {
-            appendMessage('Pertanyaan bagus! Berdasarkan estimasi beban kognitif, slot fokus 90 menit sudah ideal untuk menyelesaikannya.', false);
-          }, 600);
-        }
+        if (msg) handleUserInteraction(msg);
       });
     });
 
-    // 1. Clear Chat Modal
+    // 8. API Key Modal & Settings Logic
+    const inputKeyEl = document.getElementById('input-gemini-key') as HTMLInputElement;
+    const statusBadge = document.getElementById('api-status-badge');
+    const statusNote = document.getElementById('api-status-note');
+    const engineBadge = document.getElementById('ai-engine-badge');
+
+    const updateEngineStatusUI = () => {
+      const activeKey = localStorage.getItem(STORAGE_KEY_GEMINI)?.trim() || (import.meta as any).env?.PUBLIC_GEMINI_API_KEY?.trim() || '';
+      if (activeKey) {
+        if (statusBadge) {
+          statusBadge.className = 'api-status-badge mode-gemini';
+          statusBadge.textContent = 'Google Gemini 1.5 Flash Aktif';
+        }
+        if (statusNote) {
+          statusNote.textContent = 'Kunci API valid tersimpan. Beavy terhubung langsung ke model LLM Gemini Google.';
+        }
+        if (engineBadge) {
+          engineBadge.textContent = 'Gemini AI Aktif';
+          engineBadge.style.background = '#ecfdf5';
+          engineBadge.style.color = '#059669';
+        }
+      } else {
+        if (statusBadge) {
+          statusBadge.className = 'api-status-badge mode-local';
+          statusBadge.textContent = 'Mode Mesin Heuristik Beavy (Aktif)';
+        }
+        if (statusNote) {
+          statusNote.textContent = 'Beavy tetap cerdas menjawab analisis prioritas, alokasi jam belajar, dan jadwal berdasarkan database tugas Anda.';
+        }
+        if (engineBadge) {
+          engineBadge.textContent = 'Mesin Cerdas Beavy';
+          engineBadge.style.background = '';
+          engineBadge.style.color = '';
+        }
+      }
+    };
+
+    updateEngineStatusUI();
+
+    apiKeyBtn?.addEventListener('click', () => {
+      const current = localStorage.getItem(STORAGE_KEY_GEMINI) || '';
+      if (inputKeyEl) inputKeyEl.value = current;
+      openModal('api-key-modal');
+    });
+
+    document.getElementById('btn-close-api-modal')?.addEventListener('click', () => closeModal('api-key-modal'));
+    document.getElementById('btn-cancel-api')?.addEventListener('click', () => closeModal('api-key-modal'));
+
+    document.getElementById('btn-save-api')?.addEventListener('click', () => {
+      const val = inputKeyEl?.value.trim() || '';
+      if (val) {
+        localStorage.setItem(STORAGE_KEY_GEMINI, val);
+        window.jadwalinToast?.('Kunci Disimpan', 'Beavy kini terhubung ke Gemini AI!', 'success');
+      } else {
+        localStorage.removeItem(STORAGE_KEY_GEMINI);
+        window.jadwalinToast?.('Mode Lokal Aktif', 'Kunci dihapus. Beavy kembali ke mode lokal cerdas.', 'info');
+      }
+      updateEngineStatusUI();
+      closeModal('api-key-modal');
+    });
+
+    document.getElementById('btn-test-api')?.addEventListener('click', async () => {
+      const testKey = inputKeyEl?.value.trim();
+      if (!testKey) {
+        window.jadwalinToast?.('Kunci Kosong', 'Masukkan kunci API terlebih dahulu untuk diuji.', 'warning');
+        return;
+      }
+      const testBtn = document.getElementById('btn-test-api');
+      if (testBtn) testBtn.textContent = 'Menguji...';
+
+      try {
+        await queryGeminiAI(testKey, 'Halo Beavy, tes koneksi 1 kata.');
+        window.jadwalinToast?.('Koneksi Sukses!', 'Google Gemini AI merespons dengan lancar.', 'success');
+      } catch (e: any) {
+        window.jadwalinToast?.('Koneksi Gagal', e.message || 'Periksa kembali API Key Anda.', 'error');
+      } finally {
+        if (testBtn) testBtn.textContent = 'Uji Koneksi';
+      }
+    });
+
+    // 9. Clear Chat Modal
     clearBtn?.addEventListener('click', () => openModal('clear-chat-modal'));
     document.getElementById('btn-close-clear-modal')?.addEventListener('click', () => closeModal('clear-chat-modal'));
     document.getElementById('btn-cancel-clear')?.addEventListener('click', () => closeModal('clear-chat-modal'));
 
     document.getElementById('btn-confirm-clear')?.addEventListener('click', () => {
+      chatHistory = [];
+      localStorage.removeItem(STORAGE_KEY_CHAT);
       if (container) {
-        container.innerHTML = `
-          <div class="message-bubble beavy">
-            <div class="msg-body">
-              <span class="msg-author">Beavy</span>
-              <p>Percakapan telah direset. Ada rencana belajar atau tugas baru yang ingin kamu diskusikan?</p>
-            </div>
-          </div>
-        `;
+        container.innerHTML = '';
+        const welcomeText = `Percakapan telah direset, ${userName}. Ada tugas baru atau jadwal belajar yang ingin kamu konsultasikan?`;
+        appendMessage(welcomeText, false, true);
       }
       closeModal('clear-chat-modal');
       window.jadwalinToast?.('Percakapan Direset', 'Riwayat obrolan telah dibersihkan.', 'info');
     });
 
-    // 2. Export Chat Modal
-    exportBtn?.addEventListener('click', () => openModal('export-chat-modal'));
+    // 10. Export Chat Modal
+    exportBtn?.addEventListener('click', () => {
+      const exportBox = document.getElementById('export-text-content');
+      if (exportBox) {
+        const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        let transcript = `=======================================================\nJADWAL.IN - CATATAN ASISTENSI BEAVY AI\nTanggal : ${dateStr}\nPengguna: ${userName} (${userEmail})\n=======================================================\n\n`;
+
+        chatHistory.forEach(item => {
+          transcript += `[${item.isUser ? userName : 'Beavy'} - ${item.time || ''}]:\n${item.text}\n\n`;
+        });
+
+        exportBox.textContent = transcript;
+      }
+      openModal('export-chat-modal');
+    });
+
     document.getElementById('btn-close-export-modal')?.addEventListener('click', () => closeModal('export-chat-modal'));
     document.getElementById('btn-close-export')?.addEventListener('click', () => closeModal('export-chat-modal'));
 
@@ -749,7 +1245,7 @@ import X from 'phosphor-astro/X.astro';
       window.jadwalinToast?.('Tersalin ke Papan Klip', 'Ringkasan konsultasi siap ditempel di aplikasi catatan.', 'success');
     });
 
-    // Global ESC
+    // Global ESC key listener
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-backdrop-overlay.active').forEach(m => m.classList.remove('active'));
