@@ -1045,7 +1045,11 @@ Instruksi gaya bahasa:
 - Gunakan format markdown tebal (**kata penting**) dan poin-poin (•) jika memberi saran langkah.
 - Jaga jawaban tetap ringkas dan padat (maksimal 2-4 paragraf).`;
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+
+      // Model gemini-flash-latest with X-goog-api-key header and query parameter
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${encodeURIComponent(apiKey)}`;
 
       const payload = {
         contents: [
@@ -1060,21 +1064,32 @@ Instruksi gaya bahasa:
         ]
       };
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-goog-api-key': apiKey
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!reply) throw new Error('Format balasan AI tidak valid');
+        return reply.trim();
+      } catch (err) {
+        clearTimeout(timeoutId);
+        throw err;
       }
-
-      const data = await response.json();
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!reply) throw new Error('Format balasan AI tidak valid');
-      return reply.trim();
     }
 
     // 7. Core Dispatcher: Gemini with Local Heuristic Fallback
