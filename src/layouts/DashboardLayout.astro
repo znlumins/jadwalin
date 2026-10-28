@@ -14,6 +14,7 @@ import Plus from 'phosphor-astro/Plus.astro';
 import UploadSimple from 'phosphor-astro/UploadSimple.astro';
 import SignOut from 'phosphor-astro/SignOut.astro';
 import X from 'phosphor-astro/X.astro';
+import SidebarSimple from 'phosphor-astro/SidebarSimple.astro';
 
 interface Props {
   title: string;
@@ -68,6 +69,10 @@ const { title, activeNav = 'beranda' } = Astro.props;
           var cloak = document.getElementById('auth-guard-cloak');
           if (cloak && cloak.parentNode) {
             cloak.parentNode.removeChild(cloak);
+          }
+          // Restore sidebar collapsed preference on desktop
+          if (localStorage.getItem('jadwalin_sidebar_collapsed') === '1' && window.innerWidth > 960) {
+            document.documentElement.classList.add('sidebar-collapsed');
           }
         } catch (e) {
           window.location.replace('/login?auth_required=1');
@@ -276,6 +281,7 @@ const { title, activeNav = 'beranda' } = Astro.props;
         bottom: 0;
         left: 0;
         z-index: 50;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .sidebar-brand {
@@ -285,6 +291,53 @@ const { title, activeNav = 'beranda' } = Astro.props;
         padding: 0.2rem 0.4rem 1.2rem;
         border-bottom: 1px solid var(--color-border-subtle);
         margin-bottom: 1.2rem;
+      }
+
+      .btn-sidebar-toggle {
+        background: transparent;
+        border: 1px solid var(--color-border-subtle);
+        color: var(--color-text-muted);
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+      }
+
+      .btn-sidebar-toggle:hover {
+        background: var(--color-primary-light);
+        color: var(--color-primary-dark);
+        border-color: var(--color-border-focus);
+      }
+
+      .btn-sidebar-reopen {
+        display: none;
+        position: fixed;
+        top: 1.25rem;
+        left: 1.25rem;
+        z-index: 45;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text-body);
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+      }
+
+      .btn-sidebar-reopen:hover {
+        background: var(--color-primary-light);
+        color: var(--color-primary-dark);
+        border-color: var(--color-border-focus);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
       }
 
       .sidebar-logo {
@@ -488,6 +541,7 @@ const { title, activeNav = 'beranda' } = Astro.props;
         padding: 1.5rem 2.8rem 3rem;
         max-width: 1400px;
         width: calc(100% - 260px);
+        transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       /* Main Content Layout */
@@ -574,8 +628,30 @@ const { title, activeNav = 'beranda' } = Astro.props;
         to { transform: scale(1); opacity: 1; }
       }
 
+      /* Collapsed State (Desktop) */
+      @media (min-width: 961px) {
+        .sidebar-collapsed .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar-collapsed .main-viewport {
+          margin-left: 0;
+          width: 100%;
+          padding-left: 4.8rem;
+        }
+
+        .sidebar-collapsed .btn-sidebar-reopen {
+          display: flex;
+        }
+      }
+
       /* Responsive rules */
       @media (max-width: 960px) {
+        .btn-sidebar-toggle,
+        .btn-sidebar-reopen {
+          display: none !important;
+        }
+
         .sidebar {
           display: none;
         }
@@ -708,6 +784,11 @@ const { title, activeNav = 'beranda' } = Astro.props;
   </head>
   <body>
     <div class="app-container">
+      <!-- Desktop Reopen Sidebar Trigger -->
+      <button id="btn-open-sidebar" class="btn-sidebar-reopen" type="button" aria-label="Tampilkan Sidebar" title="Tampilkan Sidebar (Ctrl+B)">
+        <SidebarSimple width="18" height="18" aria-hidden="true" />
+      </button>
+
       <!-- 1. DESKTOP SIDEBAR -->
       <aside class="sidebar">
         <div>
@@ -716,6 +797,9 @@ const { title, activeNav = 'beranda' } = Astro.props;
             <a href="/beranda">
               <Image src={logoImg} alt="Jadwal.in" class="sidebar-logo" loading="eager" />
             </a>
+            <button id="btn-toggle-sidebar" class="btn-sidebar-toggle" type="button" aria-label="Sembunyikan Sidebar" title="Sembunyikan Sidebar (Ctrl+B)">
+              <SidebarSimple width="18" height="18" aria-hidden="true" />
+            </button>
           </div>
 
           <!-- Navigation Links -->
@@ -1016,6 +1100,34 @@ const { title, activeNav = 'beranda' } = Astro.props;
           window.location.href = '/login?logged_out=1';
         });
       });
+
+      // Sidebar Toggle Logic (Desktop)
+      const setupSidebarToggle = () => {
+        const toggleBtn = document.getElementById('btn-toggle-sidebar');
+        const openBtn = document.getElementById('btn-open-sidebar');
+
+        const applySidebarState = (collapsed: boolean) => {
+          if (window.innerWidth > 960) {
+            document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
+            document.body.classList.toggle('sidebar-collapsed', collapsed);
+            localStorage.setItem('jadwalin_sidebar_collapsed', collapsed ? '1' : '0');
+          }
+        };
+
+        toggleBtn?.addEventListener('click', () => applySidebarState(true));
+        openBtn?.addEventListener('click', () => applySidebarState(false));
+
+        // Keyboard Shortcut: Ctrl + B or Cmd + B
+        window.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+            e.preventDefault();
+            const isCurrentlyCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
+            applySidebarState(!isCurrentlyCollapsed);
+          }
+        });
+      };
+
+      setupSidebarToggle();
     </script>
   </body>
 </html>
